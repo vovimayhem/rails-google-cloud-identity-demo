@@ -31,8 +31,7 @@
   "shutdownAction": "stopCompose",
 
   // Required. The name of the service VS Code should connect to once running.
-  // TODO: Change to "development" once the app has been created.
-  "service": "create_app",
+  "service": "development",
 
   // An array of services in your Docker Compose configuration that should be
   // started by VS Code. These will also be stopped when you disconnect unless

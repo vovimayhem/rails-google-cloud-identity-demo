@@ -91,11 +91,3 @@ services:
       CHROME_PUBLIC_URL: ${CHROME_PUBLIC_URL:-http://localhost:${DEMO_CHROME_WEB_PORT:-9222}}
 
       DATABASE_URL: postgres://postgres:5432/?encoding=unicode
-
-  # The container in which we'll create the app - safe to remove once the app
-  # has been generated:
-  create_app:
-    <<: *dev
-    build:
-      <<: *dev_build
-      target: development-base
