@@ -1,0 +1,17 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore OS artifacts:
+**/.DS_Store
+
+# Ignore version control files:
+.git/
+.gitignore
+
+# Ignore docker and environment files:
+*Dockerfile
+**/docker-compose*.yml
+.dockerignore
+
+# Ignore dotenv files
+**/*.env

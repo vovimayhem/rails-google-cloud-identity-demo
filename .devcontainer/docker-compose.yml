@@ -1,0 +1,32 @@
+# Used in Visual Studio Code in combination of the "docker-compose.yml" file at
+# the root of the project:
+volumes:
+  vscode_extensions:          # Stores the extensions for visual studio code
+  vscode_insiders_extensions: # Stores the extensions for visual studio code "for insiders" edition
+
+services:
+  development:
+    volumes:
+      - .:/workspaces/rails-google-cloud-identity-demo
+      - gem_bundle:/usr/local/bundle
+      - vscode_extensions:/home/${USER:-you}/.vscode-server/extensions
+      - vscode_insiders_extensions:/home/${USER:-you}/.vscode-server-insiders/extensions
+
+    # The command we want to execute by default when running the container
+    # [Optional] Required for ptrace-based debuggers like C++, Go, and Rust
+    cap_add:
+      - SYS_PTRACE
+      - NET_ADMIN
+    security_opt:
+      - seccomp:unconfined
+
+    # entrypoint: /workspaces/rails-google-cloud-identity-demo/bin/dev-entrypoint
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+    environment:
+      # Use VSCode as editor:
+      EDITOR: code -w
+
+      VSCODE_CONTEXT: "yes"

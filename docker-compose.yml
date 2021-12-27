@@ -1,0 +1,101 @@
+volumes:
+  gem_bundle:    # Stores the app's gem libraries
+  postgres_data: # Stores the app's main database
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    volumes:
+      # We'll store the postgres data in the 'postgres_data' volume we defined:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+    ports:
+      - published: ${DEMO_PG_PORT:-5432}
+        target: 5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: ${USER:-you}
+
+  chrome:
+    image: icalialabs/chromium:latest
+    ports:
+      - published: ${DEMO_CHROME_WEB_PORT:-9222}
+        target: 9222
+    # Mount application source code to support file uploading
+    # (otherwise Chrome won't be able to find files).
+    # NOTE: Make sure you use absolute paths in `#attach_file`.
+    volumes:
+      - type: bind
+        source: .
+        target: /workspaces/rails-google-cloud-identity-demo
+    environment:
+      # By default, it uses 9222, which is typically used by Rails.
+      PORT: 9222
+      # Set connection timeout to avoid timeout exception during debugging
+      # https://docs.browserless.io/docs/docker.html#connection-timeout
+      CONNECTION_TIMEOUT: 600000
+
+  # The test container - we'll use this as the base for the rest
+  # of the app service definitions:
+  development: &dev
+    build: &dev_build
+      context: .
+      dockerfile: Dockerfile
+      target: development
+      args:
+        DEVELOPER_UID: ${UID:-1000}
+        DEVELOPER_USERNAME: ${USER:-you}
+    image: vovimayhem/rails-google-cloud-identity-demo:development
+    volumes:
+      # Mount the app code into the app containers:
+      - .:/workspaces/rails-google-cloud-identity-demo
+
+      # After mounting the app code, we will use volumes to store the project's
+      # gem libraries and node modules.
+
+      # In the case of the gem libraries, the "gem_bundle" volume will be
+      # initialized with the development image's installed gems. Gems can be
+      # added later during the development process without re-building the
+      # development image:
+      - gem_bundle:/usr/local/bundle
+
+    # Keep the stdin open, so we can attach to our app container's process
+    # and do things such as byebug, etc:
+    stdin_open: true
+
+    # Enable sending signals (CTRL+C, CTRL+P + CTRL+Q) into the container:
+    tty: true
+
+    # Link to our postgres and redis services, so they can be visible from our
+    # app service containers:
+    depends_on:
+      - chrome
+      - postgres
+
+    # The command we want to execute by default when running the container
+    # command: rspec
+
+    # The entrypoint script:
+    # entrypoint: /workspaces/rails-google-cloud-identity-demo/bin/dev-entrypoint
+
+    # Specify environment variables available for our app containers. We'll
+    # leave a YML anchor in case we need to override or add more variables if
+    # needed on each app service:
+    environment:
+      RAILS_LOG_TO_STDOUT: "true"
+
+      # Tells the test suite to use the "chrome" service instead of a local
+      # chrome install:
+      CHROME_URL: http://chrome:9222
+      CHROME_PUBLIC_URL: ${CHROME_PUBLIC_URL:-http://localhost:${DEMO_CHROME_WEB_PORT:-9222}}
+
+      DATABASE_URL: postgres://postgres:5432/?encoding=unicode
+
+  # The container in which we'll create the app - safe to remove once the app
+  # has been generated:
+  create_app:
+    <<: *dev
+    build:
+      <<: *dev_build
+      target: development-base

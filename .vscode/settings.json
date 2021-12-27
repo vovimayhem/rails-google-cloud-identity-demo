@@ -1,0 +1,33 @@
+{
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    ".*_hist*": true,
+    ".bundle": true,
+    ".config": true,
+    ".gem": true,
+    ".gnupg": true,
+    ".local": true,
+    ".solargraph": true,
+    ".viminfo": true,
+    ".vscode-server": true,
+    ".webdrivers": true,
+    ".cache": true,
+    ".ssh": true,
+    ".yarn": true,
+  },
+
+  "ruby.useBundler": true,
+
+  "solargraph.autoformat": true,
+  "solargraph.diagnostics": true,
+  "solargraph.formatting": true,
+  "solargraph.useBundler": true,
+  "files.associations": {
+    ".simplecov": "ruby"
+  }
+}
