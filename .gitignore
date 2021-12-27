@@ -32,3 +32,7 @@
 
 # Ignore rspec examples state file
 spec/examples.txt
+
+# Ignore dotenv files, except example files:
+**/*.env
+!**/*example*.env

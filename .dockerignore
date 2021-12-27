@@ -13,9 +13,6 @@
 **/docker-compose*.yml
 .dockerignore
 
-# Ignore dotenv files
-**/*.env
-
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
@@ -41,3 +38,6 @@
 
 # Ignore rspec examples state file
 spec/examples.txt
+
+# Ignore dotenv files
+**/*.env
