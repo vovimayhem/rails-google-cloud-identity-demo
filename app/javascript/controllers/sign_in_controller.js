@@ -12,10 +12,24 @@ const signInOptions = [
 
 // Connects to data-controller="sign-in"
 export default class extends Controller {
+  static targets = [ "sessionForm", "token" ]
+
   connect() {
     const firebaseAuth = firebase.auth()
     const firebaseAuthUI = new firebaseui.auth.AuthUI(firebaseAuth)
+    const signInSuccessWithAuthResult = this.successCallBack.bind(this)
 
-    firebaseAuthUI.start("#auth-container", { signInOptions })
+    firebaseAuthUI.start("#auth-container", {
+      signInOptions, callbacks: { signInSuccessWithAuthResult }
+    })
+  }
+
+  successCallBack(authResult) {
+    authResult.user.getIdToken(true).then(token => {
+      this.tokenTarget.value = token
+      this.sessionFormTarget.submit()
+    })
+
+    return false
   }
 }

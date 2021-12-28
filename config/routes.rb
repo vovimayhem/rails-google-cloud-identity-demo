@@ -5,5 +5,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'home#show'
-  get 'sign-in', to: 'session#new'
+
+  get 'sign-in', to: 'session#new', as: :new_session
+  resource :session, controller: :session, only: %i[create destroy]
 end

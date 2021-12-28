@@ -3,6 +3,6 @@
 #= HomeController
 #
 # The home controller :)
-class HomeController < ApplicationController
+class HomeController < AuthenticatedController
   def show; end
 end

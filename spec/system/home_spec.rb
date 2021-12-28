@@ -3,7 +3,18 @@
 require 'system_helper'
 
 RSpec.describe 'Home', type: :system do
-  it 'is under construction' do
+  let(:example_user) { create :user }
+
+  scenario 'Unauthenticated user sees the sign in form' do
+    visit root_path
+
+    # We'll just test firebase UI rendering an authentication form:
+    expect(page).to have_field 'Email'
+    expect(page).to have_button 'Next'
+  end
+
+  scenario 'Authenticated user sees the home page' do
+    sign_in example_user
     visit root_path
 
     # ICALIA TIP: Use `debug` or `debug binding` instead of `debugger` in system
