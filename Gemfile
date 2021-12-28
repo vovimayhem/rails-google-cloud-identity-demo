@@ -53,6 +53,11 @@ gem 'bootsnap', require: false
 # We'll use JWT to handle the tokens given to us from Google Cloud Identity Platform:
 gem 'jwt', '~> 2.3'
 
+# We'll use faraday directly to fetch the Google Cloud Certificates used to
+# validate the tokens:
+gem 'faraday', '~> 1.8'
+gem 'faraday_middleware', '~> 1.2'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw x64_mingw]
