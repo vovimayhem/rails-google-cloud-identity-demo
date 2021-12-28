@@ -32,6 +32,12 @@ remote_chrome =
 
 remote_options = remote_chrome ? { url: REMOTE_CHROME_URL } : {}
 
+# Allow requests to the remote google chrome service, if configured
+if remote_chrome
+  WebMock::Config.instance.allow ||= []
+  WebMock::Config.instance.allow << REMOTE_CHROME_URL
+end
+
 Capybara.register_driver(:cuprite_remote) do |app|
   Capybara::Cuprite::Driver.new(
     app,

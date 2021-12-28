@@ -92,4 +92,7 @@ group :test do
 
   # Cuprite is a modern Capybara driver which uses Chrome CDP API
   gem 'cuprite', '~> 0.13'
+
+  # Used for stubbing and setting expectations on HTTP requests:
+  gem 'webmock', '~> 3.14'
 end
